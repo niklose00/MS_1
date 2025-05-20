@@ -37,7 +37,7 @@ class Simulation:
             self.current_time = event.timestamp
             event.processEvent(self)
 
-        self.stats.print_summary()
+        # self.stats.print_summary()
         self.logger.print_log()
         self.logger.save_to_csv("event_log.csv")
 
