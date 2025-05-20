@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from config import CHECK_DURATION, TEST_DURATION_PER_PERSON, MAX_QUEUE_SIZE
 from utils import uniform_int
+from logger import Logger  # Logger importieren
 import heapq
 
 class Event(ABC):
@@ -23,9 +24,12 @@ class ArrivingEvent(Event):
 
         if len(sim.queue) >= MAX_QUEUE_SIZE:
             sim.stats.rejected_cars += 1
+            sim.logger.log(self.timestamp, self.car_id, "Arriving", len(sim.queue))
             return
 
         sim.queue.append(self)
+        sim.logger.log(self.timestamp, self.car_id, "Arriving", len(sim.queue))
+
         check_delay = uniform_int(*CHECK_DURATION)
         test_time = self.timestamp + check_delay
         sim.add_event(TestingEvent(test_time, self.car_id, self.num_people))
@@ -33,6 +37,8 @@ class ArrivingEvent(Event):
 
 class TestingEvent(Event):
     def processEvent(self, sim):
+        sim.logger.log(self.timestamp, self.car_id, "Testing", len(sim.queue))
+
         test_duration = self.num_people * TEST_DURATION_PER_PERSON
         leave_time = self.timestamp + test_duration
         sim.add_event(LeavingEvent(leave_time, self.car_id, self.num_people))
@@ -43,3 +49,5 @@ class LeavingEvent(Event):
         sim.queue.pop(0)
         sim.stats.tested_cars += 1
         sim.stats.tested_people += self.num_people
+
+        sim.logger.log(self.timestamp, self.car_id, "Leaving", len(sim.queue))

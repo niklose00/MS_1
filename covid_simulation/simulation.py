@@ -3,6 +3,8 @@ from event import ArrivingEvent
 from config import SIMULATION_DURATION, ARRIVAL_INTERVAL, MIN_PEOPLE_PER_CAR, MAX_PEOPLE_PER_CAR
 from utils import uniform_int
 from stats import Statistics
+from logger import Logger
+
 
 class Simulation:
     def __init__(self):
@@ -11,6 +13,7 @@ class Simulation:
         self.current_time = 0
         self.stats = Statistics()
         self.car_counter = 0
+        self.logger = Logger()
 
     def add_event(self, event):
         heapq.heappush(self.event_list, event)
@@ -35,3 +38,6 @@ class Simulation:
             event.processEvent(self)
 
         self.stats.print_summary()
+        self.logger.print_log()
+        self.logger.save_to_csv("event_log.csv")
+
