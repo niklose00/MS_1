@@ -10,6 +10,7 @@ Group       : Group 6
 
 import pandas as pd
 import matplotlib.pyplot as plt
+from simulation import Simulation
 
 def analyze(logger_entries, sim_stats):
     """
@@ -43,7 +44,7 @@ def analyze(logger_entries, sim_stats):
 
     plt.figure(figsize=(10, 5))
     time_bins.plot(kind='bar')
-    plt.title("⏱ Avg. cars in system per 5-minute interval")
+    plt.title("Avg. cars in system per 5-minute interval")
     plt.xlabel("Time (minutes)")
     plt.ylabel("Average # of cars in system")
     plt.tight_layout()
@@ -59,8 +60,32 @@ def analyze(logger_entries, sim_stats):
 
     plt.figure(figsize=(8, 5))
     plt.hist(joined['dwell_time'], bins=20, edgecolor='black')
-    plt.title("⏳ Dwell time distribution")
+    plt.title("Dwell time distribution")
     plt.xlabel("Time in system (seconds)")
     plt.ylabel("Number of vehicles")
     plt.tight_layout()
     plt.show()
+    
+    
+
+def analyze_queue_capacity_reduction(start=10, end=20, step=2):
+    """
+    Runs the simulation multiple times with increasing queue capacities,
+    and prints how many rejections are avoided as the queue grows.
+    """
+    results = []
+
+    for capacity in range(start, end + 1, step):
+        sim = Simulation(queue_size=capacity)
+        sim.run()
+        rejected = sim.stats.rejected_cars
+        results.append((capacity, rejected))
+
+    baseline = results[0][1]
+    print(f"4. Impact of queue size on rejected cars")
+    print("\nQueue Size | Rejected Cars | Reduction (%)")
+    print("-" * 42)
+    for capacity, rejected in results:
+        reduction = ((baseline - rejected) / baseline * 100) if baseline else 0
+        print(f"{capacity:10} | {rejected:14} | {reduction:13.2f}")
+

@@ -12,7 +12,7 @@ Group       : Group 6
 """
 
 from abc import ABC, abstractmethod
-from config import CHECK_DURATION, TEST_DURATION_PER_PERSON, MAX_QUEUE_SIZE
+from config import CHECK_DURATION, TEST_DURATION_PER_PERSON
 from utils import uniform_int
 from logger import Logger
 import heapq
@@ -57,7 +57,7 @@ class ArrivingEvent(Event):
         sim.stats.total_cars += 1
 
         # If queue is full, reject the car
-        if len(sim.queue) >= MAX_QUEUE_SIZE:
+        if len(sim.queue) >= sim.queue_limit:
             sim.stats.rejected_cars += 1
             sim.logger.log(self.timestamp, self.car_id, "Rejecting", len(sim.queue))
             return

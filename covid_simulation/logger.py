@@ -68,4 +68,4 @@ class Logger:
             for entry in self.entries:
                 writer.writerow(entry)
 
-        print(f"\nCSV log saved as '{filename}'")
+        # print(f"\nCSV log saved as '{filename}'")

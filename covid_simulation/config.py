@@ -28,3 +28,7 @@ MAX_QUEUE_SIZE = 10
 # Maximum and minimum number of people per arriving car
 MAX_PEOPLE_PER_CAR = 5
 MIN_PEOPLE_PER_CAR = 1
+
+# Controls whether event logs are printed to the console (True/False)
+LOG_TO_CONSOLE = False
+

@@ -11,7 +11,7 @@ Group       : Group 6
 
 import heapq
 from event import ArrivingEvent
-from config import SIMULATION_DURATION, ARRIVAL_INTERVAL, MIN_PEOPLE_PER_CAR, MAX_PEOPLE_PER_CAR
+from config import LOG_TO_CONSOLE, SIMULATION_DURATION, ARRIVAL_INTERVAL, MIN_PEOPLE_PER_CAR, MAX_PEOPLE_PER_CAR
 from utils import uniform_int
 from stats import Statistics
 from logger import Logger
@@ -26,7 +26,7 @@ class Simulation:
     - Maintaining simulation statistics and logs
     """
 
-    def __init__(self):
+    def __init__(self, queue_size=10):
         """
         Initializes simulation state:
         - event_list: priority queue (min-heap) of all scheduled events
@@ -36,6 +36,7 @@ class Simulation:
         - car_counter: incremental ID for each arriving car
         - logger: records event data for analysis and CSV export
         """
+        self.queue_limit = queue_size
         self.event_list = []
         self.queue = []
         self.current_time = 0
@@ -89,5 +90,7 @@ class Simulation:
             event.processEvent(self)
 
         # Output the full event log
-        self.logger.print_log()
+        if LOG_TO_CONSOLE:
+            self.logger.print_log()
+
         self.logger.save_to_csv("event_log.csv")
